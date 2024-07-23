@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../public/assets/bps.png" type="image/x-icon">
+  <link href="./output.css" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <title>Lingsir</title>
+</head>
+
+<body class="min-h-screen bg-[#FFFFFF] font-plusJakartaSans">
+  <header class="grid w-full mt-3 mb-3 border-b-slate-200">
+    <div class="grid grid-flow-col justify-around border-b-2 border-gray-300 pb-3">
+      <div class="grid grid-flow-col content-center w-fit">
+        <img src="../public/assets/bps.png" class="object-contain" alt="">
+        <h2 class="font-nobile text-sm font-bold italic ml-1">BADAN PUSAT STATISTIK<br />KABUPATEN TULUNGAGUNG</h2>
+      </div>
+
+      <!-- Search Pop-Up -->
+      <!-- <div x-data="{ open: false }">
+        <button @click="open = true" class="grid grid-flow-col content-center">
+          <img class="mr-8" src="../public/icon/search.svg" alt="">
+        </button>
+
+        <div x-show="open" @click.away="open = false" class="fixed inset-0 flex items-center justify-center z-50">  
+          <div class="absolute inset-0 bg-gray-800 opacity-50"></div>
+          <label for="default-search"
+            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+          <div class="relative bg-white p-6 rounded-lg shadow-lg z-10 w-1/2">
+            <div class="relative">
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <img src="../public/icon/search.svg" alt="">
+              </div>
+              
+              <input type="search" x-model="query"
+                class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-[#C3E8EE] focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Cari link..."></input>
+
+              <template x-for="(category, categoryIndex) in filteredCategories" :key="categoryIndex">
+                <div class="flex mb-4">
+                  <div class="p-2 bg-gray-200">
+                    <h2 x-text="category.name"></h2>
+                  </div>
+                  <ul class="pl-4">
+                    <template x-for="link in filteredLinks(categoryIndex)" :key="link.name">
+                      <li class="p-2 border-b">
+                        <h3 x-text="link.name"></h3>
+                        <p x-text="link.desc" class="text-gray-500"></p>
+                      </li>
+                    </template>
+                  </ul>
+                </div>
+              </template>
+            </div>
+            <button @click="open = false" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+              Close
+            </button>
+          </div>
+        </div>
+      </div> -->
+
+    </div>
+  </header>
+
+  <!-- Title and Description -->
+  <div class="flex flex-col m-7 items-center justify-center">
+    <div class="text-center">
+      <h1 class="font-plusJakartaSans font-bold text-5xl mb-5">Lingsir</h1>
+      <p class="hidden lg:grid font-inter text-base mb-3">Lingsir atau Link n Share merupakan Sistem Informasi yang berisi kumpulan sistem
+        informasi dan <br /> aplikasi yang digunakan oleh BPS Kabupaten Tulungagung untuk mempermudah dalam melakukan
+        <br /> tugas dan tanggung jawab sebagai "Penyedia Data Statistik Berkualitas untuk Indonesia Maju".
+      </p>
+      <p class="grid lg:hidden font-inter text-base mb-3">Lingsir atau Link n Share merupakan Sistem Informasi yang berisi kumpulan sistem
+        informasi dan aplikasi yang digunakan oleh BPS Kabupaten Tulungagung untuk mempermudah dalam melakukan
+        tugas dan tanggung jawab sebagai "Penyedia Data Statistik Berkualitas untuk Indonesia Maju".
+      </p>
+    </div>
+
+    <div @click.away="closeAll" class="w-full lg:w-2/3 mx-auto p-4" x-data="categoryLink()">
+      <template x-for="(category, categoryIndex) in categories" :key="categoryIndex">
+        <div class="grid content-center w-full bg-[#C3E8EE] rounded-xl shadow-lg mb-8 p-4 hover:cursor-pointer">
+          <!-- Category -->
+          <div @click="toggleCategory(categoryIndex)" class="grid grid-flow-col items-center">
+            <div class="grid grid-flow-col items-center w-fit">
+              <div class="bg-[#FFFFFF] p-2 rounded-full w-fit h-fit">
+                <img class="scale-90" :src="`../public/icon/${category.icon}`" :alt="category.name">
+              </div>
+              <h3 class="grid content-center font-bold text-lg ml-6" x-text="category.name"></h3>
+            </div>
+            <div class="grid items-center justify-end ml-auto">
+              <img x-show="!openCategories.includes(categoryIndex)" class="scale-75" src="/public/icon/plus.svg"
+                alt="Expand">
+              <img x-show="openCategories.includes(categoryIndex)" class="scale-75" src="/public/icon/close.svg"
+                alt="Collapse">
+            </div>
+          </div>
+
+          <!-- Links Section -->
+          <div class="container">
+            <div x-show="openCategories.includes(categoryIndex)"
+              class="flex flex-wrap justify-center font-plusJakartaSans mt-4">
+              <template x-for="(link, linkIndex) in links[categoryIndex]" :key="linkIndex">
+                <div @click="window.open(link.url, '_blank')"
+                  class="w-1/3 lg:w-1/4 m-4 lg:m-6 bg-[#023C85] rounded-xl mb-2 hover:bg-[#0090BF]">
+                  <div class="grid place-items-center bg-[#FFFFFF] rounded-tl-xl rounded-tr-xl p-2">
+                    <img :src="`../public/assets/${link.icon}`" alt="">
+                  </div>
+                  <div class="p-3">
+                    <p class="text-base text-center font-bold text-white text-wrap" x-text="link.name"></p>
+                    <p class="text-xs text-center pt-2 text-white" x-text="link.desc"></p>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <footer class="w-full bg-[#333132] pt-6 pb-6 font-inter">
+    <p class="text-[#D9D9D699] text-center text-sm">Hak Cipta &copy; BPS Kabupaten Tulungagung</p>
+  </footer>
+
+  <!-- Back To Top -->
+  <button x-data="{ show: false }" x-show="show" @scroll.window="show = (window.scrollY > 100)"
+    @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    class="fixed scale-150 bottom-5 right-7 bg-[#023C85] text-white pt-1 pb-1 pr-3 pl-3 rounded-lg shadow-2xl focus:outline-none">
+    &#x1F851;
+  </button>
+
+  <script src="./script.js"></script>
+</body>
+
+</html>
